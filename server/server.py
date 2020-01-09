@@ -4,6 +4,7 @@ import os
 import asyncio
 
 import threading
+import datetime
 
 from six.moves import input
 
@@ -17,12 +18,38 @@ async def main():
     conn_str = os.getenv("HostName=pythonIotTest.azure-devices.net;DeviceId=DannysDevice;SharedAccessKey=uSNG511Rlb0zdvzEZ5nkQyhDEFNAuf4GRyLpHNmW2B4=")
     # The client object is used to interact with your Azure IoT hub.
     conn_str = "HostName=pythonIotTest.azure-devices.net;DeviceId=DannysDevice;SharedAccessKey=uSNG511Rlb0zdvzEZ5nkQyhDEFNAuf4GRyLpHNmW2B4="
+    
+    
+    #connection string of the petfeeder device Iot
+    conn_str = "HostName=pyIotFun.azure-devices.net;DeviceId=PetFeederDevice;SharedAccessKey=5u6RNpjEHHXZCKMjaFdssutvWuQWO+aLvGHG+nBmvT0="
+    
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
     # connect the client.
     await device_client.connect()
 
     # define behavior for handling methods
+    async def FeedPet_listener(device_client):
+        while True:
+            method_request = await device_client.receive_method_request(
+                "feedPet"
+            )  # Wait for method1 calls
+            responseMsg = "Pet feeder last ran at: %s" % datetime.datetime.now()
+
+            payload = {"result": True, "data": responseMsg}  # set response payload
+            status = 200  # set return status code
+            print("running pet feeder")
+
+            ####
+            #PET FEED HERE RUN PET FEEDER
+
+            ####
+            method_response = MethodResponse.create_from_method_request(
+                method_request, status, payload
+            )
+            await device_client.send_method_response(method_response)  # send response
+
+
     async def method1_listener(device_client):
         while True:
             method_request = await device_client.receive_method_request(
@@ -75,6 +102,7 @@ async def main():
         method1_listener(device_client),
         method2_listener(device_client),
         generic_method_listener(device_client),
+        FeedPet_listener(device_client),
     )
 
     # Run the stdin listener in the event loop
