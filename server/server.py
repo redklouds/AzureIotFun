@@ -20,9 +20,11 @@ async def main():
     conn_str = "HostName=pythonIotTest.azure-devices.net;DeviceId=DannysDevice;SharedAccessKey=uSNG511Rlb0zdvzEZ5nkQyhDEFNAuf4GRyLpHNmW2B4="
     
     
-    #connection string of the petfeeder device Iot
+    #connection string of the petfeeder device Iotq
+    
     conn_str = "HostName=pyIotFun.azure-devices.net;DeviceId=PetFeederDevice;SharedAccessKey=5u6RNpjEHHXZCKMjaFdssutvWuQWO+aLvGHG+nBmvT0="
     
+    conn_str = "HostName=pyIotFun.azure-devices.net;DeviceId=razarPetFeeder;SharedAccessKey=2INsUbhLuSMTSWcqT5+sCev8VYsW3ukTPa04cPz/qqg="
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
     # connect the client.
